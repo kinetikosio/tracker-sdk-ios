@@ -230,7 +230,7 @@ The SDK calls your `tokenProvider` whenever it needs a token, including **when t
 
 ```swift
 enum ParticipantTokens {
-    /// TrackerTokenProvider: `@Sendable (_ forceRefresh: Bool) async throws -> String?`
+    /// TrackerTokenProvider: `@Sendable @concurrent (_ forceRefresh: Bool) async throws -> String?`
     @Sendable static func fetch(forceRefresh: Bool) async throws -> String? {
         guard let session = MyAuth.storedSession() else { return nil }   // nobody signed in
         if !forceRefresh, let cached = TokenCache.valid() { return cached } // still good for a while
@@ -314,7 +314,7 @@ for await event in Tracker.events() {
 
 ### 5.7 Sync and mobile data
 
-The SDK uploads by itself, on Wi-Fi by default. `Tracker.setAllowCellular(true)` lets it use mobile data; `Tracker.allowCellular` reads the current setting, for your own toggle. `await Tracker.syncNow()` uploads now, e.g. from a "Sync" button.
+The SDK uploads by itself, on Wi-Fi by default. `Tracker.setAllowCellular(true)` lets it use mobile data; `Tracker.allowCellular` reads the current setting, for your own toggle. `await Tracker.syncNow()` uploads now, e.g. from a "Sync" button, and asks Kinetikos for the participant's Consent first.
 
 ### 5.8 Sign-out
 
