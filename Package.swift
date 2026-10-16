@@ -18,8 +18,8 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "TrackerSDK",
-            url: "https://github.com/kinetikosio/tracker-sdk-ios/releases/download/1.0.0-beta.2/TrackerSDK-1.0.0-beta.2.xcframework.zip",
-            checksum: "a19a8b81c2668c14ea0f193ff06fa6eaea669629117e3832b046df5e579dbba9"
+            url: "https://github.com/kinetikosio/tracker-sdk-ios/releases/download/1.0.0-beta.3/TrackerSDK-1.0.0-beta.3.xcframework.zip",
+            checksum: "8f4e07441b4169d56b8b60c99a9e751c3d1d1f5bace62d8d579bcaa415c635eb"
         ),
     ]
 )
