@@ -273,6 +273,7 @@ await Tracker.startTracking()
 - The SDK **never prompts on its own**; you decide when. `Tracker.permissions()` tells you what's granted. If the person denied it, send them to Settings (`UIApplication.openSettingsURLString`).
 - `startTracking()` is remembered across launches and reboots. It's safe, and recommended, to call it on every launch once the person is signed in.
 - `stopTracking()` pauses background recording without withdrawing consent.
+- Turning off Motion & Fitness after granting it is a **withdrawal** of consent (§6), not a pause: say so near your permission settings, and ask for consent again when `state` is `withdrawn`. Asking for the permission *before* recording consent, as Kinetikos' app does, keeps a consent off Kinetikos' ledger for someone who then refuses it.
 
 *Not available yet: per-integrator silent pushes.* Kinetikos wakes phones with silent pushes so background recording keeps going, and that needs pushes signed with **your** APNs key. Until that's supported, the SDK relies on iOS background tasks alone. Recording still works, but iOS runs those tasks less often when the app isn't opened. Keep the push code from §5.1 in place: it starts working without an app update.
 
@@ -341,6 +342,7 @@ Call `startTracking()` again after the next sign-in.
 | Revoked by your backend | Recording stops; what wasn't sent is deleted; `state` is `revoked`, and the `revoked` event fires. A new invitation brings the person back: they keep their history but must give consent again (`needsConsent`). |
 | Institution suspended, or the study ended | Recording and uploads stop; what was recorded before stays on the phone. `state` is `studyInactive`, and the `studyInactive` event fires. The SDK checks every 15 minutes or so while it runs, and when the institution is active again everything resumes by itself, with no new sign-in. |
 | Consent withdrawn (in your app, or by Kinetikos staff) | Recording stops; anything recorded after the withdrawal is deleted unsent. `state` is `withdrawn`. |
+| Motion & Fitness turned off after it was granted with consent | That is a withdrawal, recorded and sent to Kinetikos like `withdrawConsent()`, the next time the SDK runs (any launch, or the app coming to the foreground). `state` is `withdrawn` and the `consentWithdrawn` event fires. Turning the permission back on doesn't restore consent: show your Consent screen again. |
 | Offline | Recordings are kept and uploaded later. |
 | `tokenProvider` returns `nil` or throws | Recording continues if it was on; uploads wait. |
 | A different person's token | The previous person's data on the phone is deleted first. |
